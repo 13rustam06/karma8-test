@@ -1,0 +1,6 @@
+* * * * * /usr/local/bin/php /back/check.php 1 2 >> /back/check_first_cron.log 2>&1
+* * * * * /usr/local/bin/php /back/check.php 3 4 >> /back/check_third_cron.log 2>&1
+* * * * * /usr/local/bin/php /back/send.php 1 2 >> /back/send_first_cron.log 2>&1
+* * * * * /usr/local/bin/php /back/send.php 3 4 >> /back/send_third_cron.log 2>&1
+* * * * * /usr/local/bin/php /back/check_job.php 0 60 >> /back/check_job_cron.log 2>&1
+* * * * * /usr/local/bin/php /back/send_job.php 0 100 >> /back/send_job_cron.log 2>&1

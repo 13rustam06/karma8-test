@@ -1,0 +1,35 @@
+volumes:
+  db-vol:
+
+services:
+  db:
+    image: mysql:latest
+    container_name: db
+    environment:
+      MYSQL_ALLOW_EMPTY_PASSWORD: "true"
+      MYSQL_DATABASE: test_db
+    restart: unless-stopped
+    volumes:
+      - db-vol:/var/lib/mysql
+    ports:
+      - "3306:3306"
+
+  db_seeder:
+    container_name: db_seeder
+    image: mysql:latest
+    volumes:
+      - ./back/table.sql:/table.sql
+    environment:
+      MYSQL_ALLOW_EMPTY_PASSWORD: "true"
+    entrypoint: [ "bash", "-c", "sleep 10 && mysql --user=root --host=db --port=3306 test_db < /table.sql && exit"]
+    depends_on:
+      - db
+
+  cron:
+    container_name: cron
+    build:
+      context: ./back
+      dockerfile: ./Dockerfile
+    entrypoint: [ "bash", "-c", "cron -f"]
+    depends_on:
+      - db_seeder
